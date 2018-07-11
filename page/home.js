@@ -1,31 +1,91 @@
 import React from 'react';
-import { Container, Header, Left, Right, Button, Icon } from 'native-base';
+import { Body, Button, Card, CardItem, Container, Content, Form, Icon, Input, Item, Label } from 'native-base';
 import {StyleSheet,Text,View} from 'react-native';
+import { Permissions, Notifications } from 'expo';
+import firebase from '../page/provider/firebaseCfg'
+
+var db = firebase.database()
+var ref = db.ref('users')
 export default class Home extends React.Component {
 
-    goToSearch = () =>{
-        this.props.navigation.navigate('Search')
+  state={
+    token:'',
+    students:[]
+  }
+
+  registerForPushNotificationsAsync = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
     }
 
+    if (finalStatus !== 'granted') {
+      return;
+    }
+
+    var token = await Notifications.getExpoPushTokenAsync()
+    this.setState({token:token})
+    
+    userToken = token.substring(18,40)
+    ref.child(userToken+"/token").set({
+      token:token
+    });
+
+    var usersRef = ref.child(userToken);
+    await usersRef.on('value', data => {
+      users = []
+      for (var x in data.val()) {
+        users.push(data.val()[x])
+      }
+      // console.log(users[0])
+      
+      let list  = users[0]
+      arr = []
+      for (var a in list){
+        arr.push(list[a])
+        // console.log(arr)
+      }
+
+
+      this.setState({ students: arr })
+    })
+  }
+
+
+  componentDidMount(){
+    this.registerForPushNotificationsAsync()
+  }
   render() {
     return (
-        <View><Text>HOME</Text></View>
-        //   <Container>
-    //     <Header style={styles.header}>
-    //       <Left>
-    //         <Button transparent>
-    //           <Icon name='md-mail' />
-    //           <Text style={styles.textHeader}>NEWS</Text>
-    //         </Button>
-    //       </Left>
-    //       <Right>
-    //         <Button transparent onPress={this.goToSearch}>
-    //           <Text style={styles.textHeader}>ADD</Text>
-    //           <Icon name='md-add' />
-    //         </Button>
-    //       </Right>
-    //     </Header>
-    //   </Container>
+        <Container>
+          <Content>
+          <Form>
+            <Item>
+              <Input value={this.state.token} />
+            </Item>
+          </Form>
+          {this.state.students.map((data,index)=>(
+            <Card key={index}>
+            <CardItem header>
+              <Text  style={{fontWeight:"bold",fontSize:20}}>ชื่อนักเรียน :{data.studentName}</Text>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text  style={{fontSize:16}}>ชั้นประถมศึกษาปีที่ : {data.studentClass}</Text>
+                <Text  style={{fontSize:16}}>คุณประจำชั้น : {data.studentTeacher}</Text>
+              </Body>
+            </CardItem>
+          </Card>
+          ))}
+          </Content>
+        </Container>
+        
     );
   }
 }
