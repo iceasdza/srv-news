@@ -6,6 +6,10 @@ admin.initializeApp(functions.config().firebase);
 exports.sendPushNotification = functions.database
   .ref("news/{id}")
   .onCreate(event => {
+
+    var header = event.val().header
+    var body = event.val().body
+
     const db = admin.database();
     const root = db.ref("users");
 
@@ -13,27 +17,13 @@ exports.sendPushNotification = functions.database
        snapshot.forEach(childSnapshot=>{
            var expoToken = childSnapshot.val().token 
            if(expoToken){
-               console.log(expoToken.token)
       axios.post('https://exp.host/--/api/v2/push/send',{
       "to": expoToken.token,
-      "title": "sawad dee ja",
-      "body": "HELLO EUIEIEIEIEIEI"
+      "title": header,
+      "body": body
     })
            }
        })
     })
 
-    //     root.child("/users").once('value').then(snapshot=>{
-    //         snapshot.forEach(childSnapshot=>{
-    //             var expoToken = childSnapshot.val().token
-
-    //             if(expoToken){
-    //                 const resp = axios.post('https://exp.host/--/api/v2/push/send',{
-    //   "to": "ExponentPushToken[y8LNpNPkeAWlfetqpcg571]",
-    //   "title": "hello",
-    //   "body": "world"
-    // }).then(console.log(resp))
-    //             }
-    //         })
-    //     })
   });

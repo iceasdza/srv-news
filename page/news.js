@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Text, View, FlatList, RefreshControl } from "react-native";
+import { Modal, Text, View, FlatList, RefreshControl,Image } from "react-native";
 import { Body, Button, Card, CardItem, Container } from "native-base";
 import firebase from "../page/provider/firebaseCfg";
 
@@ -14,13 +14,14 @@ export default class News extends React.Component {
       refreshing: false,
       news: [],
       header: "",
-      body: ""
+      body: "",
+      image: ""
     };
   }
 
-  setModalVisible(visible, header, body) {
+  setModalVisible(visible, header, body, image) {
     this.setState({ modalVisible: visible });
-    this.setState({ header: header, body: body });
+    this.setState({ header: header, body: body, image: image });
   }
 
   _onRefresh = () => {
@@ -69,6 +70,15 @@ export default class News extends React.Component {
                 {this.state.header}
               </Text>
               <Text style={{ fontSize: 16 }}>{this.state.body}</Text>
+              <View>
+              <Image
+              style={{width:350, height: 500}}
+                source={{
+                  uri:
+                    this.state.image
+                }}
+              />
+              </View>
               <Button
                 success
                 full
@@ -88,7 +98,7 @@ export default class News extends React.Component {
               <CardItem
                 button
                 onPress={() => {
-                  this.setModalVisible(true, item.header, item.body);
+                  this.setModalVisible(true, item.header, item.body, item.img);
                 }}
               >
                 <Body>
