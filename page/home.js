@@ -1,5 +1,5 @@
 import React from 'react';
-import { Body, Button, Card, CardItem, Container, Content, Form, Icon, Input, Item, Label } from 'native-base';
+import { Body, Button, Card, CardItem, Container, Content} from 'native-base';
 import {StyleSheet,Text,View} from 'react-native';
 import { Permissions, Notifications } from 'expo';
 import firebase from '../page/provider/firebaseCfg'
@@ -65,11 +65,6 @@ export default class Home extends React.Component {
     return (
         <Container>
           <Content>
-          <Form>
-            <Item>
-              <Input value={this.state.token} />
-            </Item>
-          </Form>
           {this.state.students.map((data,index)=>(
             <Card key={index}>
             <CardItem header>
@@ -79,6 +74,7 @@ export default class Home extends React.Component {
               <Body>
                 <Text  style={{fontSize:16}}>ชั้นประถมศึกษาปีที่ : {data.studentClass}</Text>
                 <Text  style={{fontSize:16}}>คุณประจำชั้น : {data.studentTeacher}</Text>
+                <Text  style={{fontSize:14}}>รหัสนักเรียน : {data.code}</Text>
               </Body>
             </CardItem>
           </Card>
