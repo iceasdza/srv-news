@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Modal,
-  Text,
-  View,
-  FlatList,
-  RefreshControl,
-  TouchableHighlight
-} from "react-native";
-import { Body, Button, Card, CardItem, Container, Content } from "native-base";
+import { Modal, Text, View, FlatList, RefreshControl } from "react-native";
+import { Body, Button, Card, CardItem, Container } from "native-base";
 import firebase from "../page/provider/firebaseCfg";
 
 var db = firebase.database();
@@ -63,19 +56,27 @@ export default class News extends React.Component {
             this.setModalVisible(!this.state.modalVisible);
           }}
         >
-          <View style={{ marginTop: 22 }}>
+          <View style={{ margin: 22 }}>
             <View>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  borderBottomColor: "black",
+                  borderBottomWidth: 1
+                }}
+              >
                 {this.state.header}
               </Text>
               <Text style={{ fontSize: 16 }}>{this.state.body}</Text>
               <Button
-                light
+                success
+                full
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
                 }}
               >
-                <Text> Close </Text>
+                <Text> ย้อนกลับ </Text>
               </Button>
             </View>
           </View>
@@ -91,9 +92,7 @@ export default class News extends React.Component {
                 }}
               >
                 <Body>
-                <Text style={{ fontSize: 15 }}>
-                    วันที่ : {item.date}
-                  </Text>
+                  <Text style={{ fontSize: 15 }}>วันที่ : {item.date}</Text>
                   <Text style={{ fontWeight: "bold", fontSize: 20 }}>
                     หัวข้อ : {item.header}
                   </Text>
