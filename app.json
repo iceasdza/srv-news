@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "srv-news",
+    "name": "Ana-kot-mai",
     "description": "This project is really great.",
-    "slug": "srv-news",
+    "slug": "Ana-kot-mai",
     "privacy": "public",
     "sdkVersion": "28.0.0",
     "platforms": ["ios", "android"],
